@@ -1,0 +1,15 @@
+mongo "mongodb+srv://msft-workshop-tp2me.azure.mongodb.net/test" --username ek
+
+user spark
+
+db.codes.insertOne({number:1, "codes":"<br>from pyspark.sql import SparkSession<br>my_spark = SparkSession \\<br>     .builder \\<br>     .appName(\"myApp\") \\<br>     .config(\"spark.mongodb.input.uri\", \"mongodb+srv://tempuser:temppassword@msft-workshop-tp2me.azure.mongodb.net/test\") \\<br>     .config(\"spark.mongodb.output.uri\", \"mongodb+srv://tempuser:temppassword@msft-workshop-tp2me.azure.mongodb.net/test\") \\<br>     .getOrCreate()"})
+
+db.codes.insertOne({number:2, "codes":"<br>people = my_spark.createDataFrame([(\"Bilbo Baggins\",  50), (\"Gandalf\", 1000), (\"Thorin\", 195), (\"Balin\", 178), (\"Kili\", 77),    (\"Dwalin\", 169), (\"Oin\", 167), (\"Gloin\", 158), (\"Fili\", 82), (\"Bombur\", None)], [\"name\", \"age\"])<br><br>people.show()<br>people.printSchema()<br><br>people.write.format(\"com.mongodb.spark.sql.DefaultSource\").mode(\"append\").option(\"database\",\"spark\").option(\"collection\", \"contacts\").save()"})
+
+db.codes.insertOne({number:3, "codes":"<br>mdbDF = my_spark.read.format(\"com.mongodb.spark.sql.DefaultSource\").option(\"database\",\"spark\").option(\"collection\", \"contacts\").load()<br>mdbDF.show()<br>mdbDF.printSchema()"})
+
+db.codes.insertOne({number:4, "codes":"<br>pipeline = \"[{'$match': {'result': 'Violation Issued'}}, {$group: {_id:'$address.city', count:{$sum:1}}}, {$sort:{count:-1}}]\"<br>aggPipelineDF = my_spark.read.format(\"com.mongodb.spark.sql.DefaultSource\").option(\"database\",\"data\").option(\"collection\", \"city_inspections\").option(\"pipeline\", pipeline).load()<br>aggPipelineDF.show()"})
+
+db.codes.insertOne({number:5, "codes":"<br>aggPipelineDF.filter(aggPipelineDF['count'] >= 100).show()"})
+
+db.codes.insertOne({number:6, "codes":"<br>aggPipelineDF.createOrReplaceTempView(\"temp\")<br>mostViolations = my_spark.sql(\"SELECT _id as city, count FROM temp WHERE count > 1000\")<br>mostViolations.show()"})
