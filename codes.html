@@ -1,0 +1,42 @@
+<html>
+<head>
+ <title>Spark notebook code snippets using Stitch (serverless MongoDB)</title>
+ <link rel="shortcut icon" href="https://media.mongodb.org/favicon.ico" />
+ <link rel="stylesheet" href="https://docs.mongodb.com/stitch/_static/mongodb-docs.css" type="text/css" />
+
+ <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.8/stitch.js"></script>
+ <script>
+  const client = stitch.Stitch.initializeDefaultAppClient('msft_spark_codes-tnmht');
+
+  const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('spark');
+
+  function displayCodes() {
+   doc = db.collection("codes")
+    .find({}, {sort:{number:1}})
+    .asArray()
+    .then(docs => docs.map(doc => `
+<div class="literal-block-wrapper copyable-code-block docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">Paragraph #${doc.number}</span></code></span></div>
+<div class="highlight-html notranslate"><div class="highlight"><pre>
+    <span class="p">${doc.codes}</span>
+</pre></div>
+</div>
+</div>`))
+    .then(codes => document.getElementById("codes").innerHTML = codes)
+  }
+// <div><u>Paragraph #${doc.number}</u><p>${doc.codes}</p></div>`))
+  function displayCodesOnLoad() {
+   client.auth
+    .loginWithCredential(new stitch.AnonymousCredential())
+    .then(displayCodes)
+    .catch(console.error);
+  }
+
+ setInterval(displayCodes, 2000);
+</script>
+</head>
+<body onload="displayCodesOnLoad()">
+<div class="literal-block-wrapper copyable-code-block docutils container"><h1>Spark notebook code snippets using Stitch (serverless MongoDB)</h1></div>
+<div id="codes"></div>
+</body>
+</html>
