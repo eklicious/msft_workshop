@@ -6,9 +6,18 @@
 
  <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.8/stitch.js"></script>
  <script>
-  const client = stitch.Stitch.initializeDefaultAppClient('msft_spark_codes-tnmht');
+  const client = stitch.Stitch.initializeDefaultAppClient('code_samples-llkiv');
 
   const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('spark');
+
+  var codesLength = 0; // track code snippet string length so we can control when we actually update the html
+
+  function checkCodeChanged(codes, codesLength) {
+    if(codes[0].length!==codesLength) {
+      document.getElementById("codes").innerHTML = codes;
+    }
+    return codes[0].length;
+  }
 
   function displayCodes() {
    doc = db.collection("codes")
@@ -22,8 +31,9 @@
 </pre></div>
 </div>
 </div>`))
-    .then(codes => document.getElementById("codes").innerHTML = codes)
+    .then(codes => codesLength = checkCodeChanged(codes, codesLength))
   }
+  
   function displayCodesOnLoad() {
    client.auth
     .loginWithCredential(new stitch.AnonymousCredential())
@@ -31,7 +41,7 @@
     .catch(console.error);
   }
 
- setInterval(displayCodes, 2000);
+ setInterval(displayCodes, 10000);
 </script>
 </head>
 <body onload="displayCodesOnLoad()">
