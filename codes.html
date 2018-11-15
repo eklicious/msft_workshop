@@ -6,6 +6,10 @@
 
  <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.8/stitch.js"></script>
  <script>
+  // Set up stitch app with a working cluster
+  // Allow anonymous login
+  // Go to cluster > collection > add new Rule and allow users to read all data rather than using the quick set up on stitch home page
+  // Update the details below
   const client = stitch.Stitch.initializeDefaultAppClient('code_samples-llkiv');
 
   const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('spark');
