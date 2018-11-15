@@ -10,13 +10,14 @@
 
   const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('spark');
 
-  var codesLength = 0; // track code snippet string length so we can control when we actually update the html
+  var codesLength = 0; // track code snippet array length so we can control when we actually update the html
 
   function checkCodeChanged(codes, codesLength) {
-    if(codes[0].length!==codesLength) {
+    // alert(codes.length + ", " + codesLength)
+    if(codes.length!==codesLength) {
       document.getElementById("codes").innerHTML = codes;
     }
-    return codes[0].length;
+    return codes.length;
   }
 
   function displayCodes() {
@@ -41,7 +42,7 @@
     .catch(console.error);
   }
 
- setInterval(displayCodes, 10000);
+ setInterval(displayCodes, 2000);
 </script>
 </head>
 <body onload="displayCodesOnLoad()">
